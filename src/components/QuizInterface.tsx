@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -24,8 +24,17 @@ interface QuizData {
   };
 }
 
+interface AddressSuggestion {
+  display_name: string;
+  lat: string;
+  lon: string;
+}
+
 const QuizInterface = () => {
   const [currentStep, setCurrentStep] = useState(0);
+  const [addressSuggestions, setAddressSuggestions] = useState<AddressSuggestion[]>([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const searchTimeoutRef = useRef<NodeJS.Timeout>();
   const [quizData, setQuizData] = useState<QuizData>({
     address: '',
     propertyType: '',
@@ -50,6 +59,46 @@ const QuizInterface = () => {
     'Contact Information'
   ];
 
+  const searchAddresses = async (query: string) => {
+    if (query.length < 3) {
+      setAddressSuggestions([]);
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&limit=5&q=${encodeURIComponent(query)}`
+      );
+      const data = await response.json();
+      setAddressSuggestions(data);
+    } catch (error) {
+      console.error('Error fetching address suggestions:', error);
+      setAddressSuggestions([]);
+    }
+  };
+
+  const handleAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setQuizData({...quizData, address: value});
+    
+    // Clear existing timeout
+    if (searchTimeoutRef.current) {
+      clearTimeout(searchTimeoutRef.current);
+    }
+    
+    // Set new timeout for search
+    searchTimeoutRef.current = setTimeout(() => {
+      searchAddresses(value);
+      setShowSuggestions(true);
+    }, 300);
+  };
+
+  const handleSuggestionClick = (suggestion: AddressSuggestion) => {
+    setQuizData({...quizData, address: suggestion.display_name});
+    setShowSuggestions(false);
+    setAddressSuggestions([]);
+  };
+
   const handleNext = () => {
     if (currentStep < steps.length - 1) {
       setCurrentStep(currentStep + 1);
@@ -66,6 +115,30 @@ const QuizInterface = () => {
     console.log('Quiz submitted:', quizData);
     // Here you would integrate with your PHP backend
     alert('Thank you! Your submission has been received.');
+  };
+
+  const getBudgetOptions = () => {
+    if (quizData.propertyType === 'rent') {
+      return [
+        { value: '', label: 'Select budget range' },
+        { value: 'under-1000', label: 'Under $1,000/month' },
+        { value: '1000-1500', label: '$1,000 - $1,500/month' },
+        { value: '1500-2000', label: '$1,500 - $2,000/month' },
+        { value: '2000-2500', label: '$2,000 - $2,500/month' },
+        { value: '2500-3000', label: '$2,500 - $3,000/month' },
+        { value: '3000-4000', label: '$3,000 - $4,000/month' },
+        { value: 'over-4000', label: 'Over $4,000/month' },
+      ];
+    } else {
+      return [
+        { value: '', label: 'Select budget range' },
+        { value: 'under-100k', label: 'Under $100,000' },
+        { value: '100k-300k', label: '$100,000 - $300,000' },
+        { value: '300k-500k', label: '$300,000 - $500,000' },
+        { value: '500k-1m', label: '$500,000 - $1,000,000' },
+        { value: 'over-1m', label: 'Over $1,000,000' },
+      ];
+    }
   };
 
   const renderStep = () => {
@@ -86,7 +159,7 @@ const QuizInterface = () => {
               <Label htmlFor="address" className="text-lg font-medium block">
                 Enter Address or Area
               </Label>
-              <div className="flex gap-4">
+              <div className="flex gap-4 relative">
                 <div className="relative flex-1">
                   <Search className="absolute left-4 top-4 h-6 w-6 text-muted-foreground" />
                   <Input
@@ -94,8 +167,25 @@ const QuizInterface = () => {
                     placeholder="e.g., New York, NY or 123 Main St"
                     className="pl-12 h-14 text-lg"
                     value={quizData.address}
-                    onChange={(e) => setQuizData({...quizData, address: e.target.value})}
+                    onChange={handleAddressChange}
+                    onFocus={() => setShowSuggestions(addressSuggestions.length > 0)}
                   />
+                  
+                  {/* Address Suggestions Dropdown */}
+                  {showSuggestions && addressSuggestions.length > 0 && (
+                    <div className="absolute top-full left-0 right-0 z-50 mt-1 bg-card border border-border rounded-md shadow-card max-h-60 overflow-y-auto">
+                      {addressSuggestions.map((suggestion, index) => (
+                        <button
+                          key={index}
+                          onClick={() => handleSuggestionClick(suggestion)}
+                          className="w-full text-left px-4 py-3 hover:bg-accent text-sm border-b border-border last:border-b-0 flex items-center gap-2"
+                        >
+                          <MapPin className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                          <span className="truncate">{suggestion.display_name}</span>
+                        </button>
+                      ))}
+                    </div>
+                  )}
                 </div>
                 <Button
                   onClick={handleNext}
@@ -115,10 +205,10 @@ const QuizInterface = () => {
         return (
           <div className="space-y-8">
             <div className="text-center space-y-6">
-              <h2 className="text-4xl font-display font-semibold text-card-foreground">
+              <h2 className="text-5xl font-display font-semibold text-card-foreground">
                 What are you looking to do?
               </h2>
-              <p className="text-xl text-muted-foreground">
+              <p className="text-2xl text-muted-foreground">
                 Choose your property goal
               </p>
             </div>
@@ -139,8 +229,8 @@ const QuizInterface = () => {
                   }`}
                 >
                   <div className="flex flex-col items-center space-y-4">
-                    <option.icon className="h-10 w-10 text-primary" />
-                    <span className="text-xl font-medium">{option.label}</span>
+                    <option.icon className="h-12 w-12 text-primary" />
+                    <span className="text-2xl font-medium">{option.label}</span>
                   </div>
                 </button>
               ))}
@@ -152,10 +242,10 @@ const QuizInterface = () => {
         return (
           <div className="space-y-8">
             <div className="text-center space-y-6">
-              <h2 className="text-4xl font-display font-semibold text-card-foreground">
+              <h2 className="text-5xl font-display font-semibold text-card-foreground">
                 Budget & Requirements
               </h2>
-              <p className="text-xl text-muted-foreground">
+              <p className="text-2xl text-muted-foreground">
                 Tell us about your preferences
               </p>
             </div>
@@ -163,7 +253,7 @@ const QuizInterface = () => {
             <div className="space-y-8">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-3">
-                  <Label htmlFor="budget" className="text-lg font-medium">
+                  <Label htmlFor="budget" className="text-xl font-medium">
                     Budget Range
                   </Label>
                   <select
@@ -172,17 +262,16 @@ const QuizInterface = () => {
                     onChange={(e) => setQuizData({...quizData, budget: e.target.value})}
                     className="w-full h-14 px-4 text-lg border border-input rounded-md bg-background"
                   >
-                    <option value="">Select budget range</option>
-                    <option value="under-100k">Under $100,000</option>
-                    <option value="100k-300k">$100,000 - $300,000</option>
-                    <option value="300k-500k">$300,000 - $500,000</option>
-                    <option value="500k-1m">$500,000 - $1,000,000</option>
-                    <option value="over-1m">Over $1,000,000</option>
+                    {getBudgetOptions().map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
                   </select>
                 </div>
                 
                 <div className="space-y-3">
-                  <Label htmlFor="propertySize" className="text-lg font-medium">
+                  <Label htmlFor="propertySize" className="text-xl font-medium">
                     Property Size
                   </Label>
                   <select
@@ -203,7 +292,7 @@ const QuizInterface = () => {
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-3">
-                  <Label htmlFor="bedrooms" className="text-lg font-medium">
+                  <Label htmlFor="bedrooms" className="text-xl font-medium">
                     Number of Bedrooms
                   </Label>
                   <select
@@ -222,7 +311,7 @@ const QuizInterface = () => {
                 </div>
                 
                 <div className="space-y-3">
-                  <Label htmlFor="bathrooms" className="text-lg font-medium">
+                  <Label htmlFor="bathrooms" className="text-xl font-medium">
                     Number of Bathrooms
                   </Label>
                   <select
@@ -248,10 +337,10 @@ const QuizInterface = () => {
         return (
           <div className="space-y-8">
             <div className="text-center space-y-6">
-              <h2 className="text-4xl font-display font-semibold text-card-foreground">
+              <h2 className="text-5xl font-display font-semibold text-card-foreground">
                 Timeline
               </h2>
-              <p className="text-xl text-muted-foreground">
+              <p className="text-2xl text-muted-foreground">
                 When are you looking to move?
               </p>
             </div>
@@ -273,7 +362,7 @@ const QuizInterface = () => {
                       : 'border-border hover:border-primary/50'
                   }`}
                 >
-                  <span className="text-lg font-medium">{option.label}</span>
+                  <span className="text-xl font-medium">{option.label}</span>
                 </button>
               ))}
             </div>
@@ -285,17 +374,17 @@ const QuizInterface = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
             <div className="space-y-8">
               <div className="text-center lg:text-left space-y-6">
-                <h2 className="text-4xl font-display font-semibold text-card-foreground">
+                <h2 className="text-5xl font-display font-semibold text-card-foreground">
                   Contact Information
                 </h2>
-                <p className="text-xl text-muted-foreground">
+                <p className="text-2xl text-muted-foreground">
                   Get personalized property recommendations
                 </p>
               </div>
               
               <div className="space-y-6">
                 <div className="space-y-3">
-                  <Label htmlFor="name" className="text-lg font-medium">
+                  <Label htmlFor="name" className="text-xl font-medium">
                     Full Name
                   </Label>
                   <Input
@@ -311,7 +400,7 @@ const QuizInterface = () => {
                 </div>
                 
                 <div className="space-y-3">
-                  <Label htmlFor="email" className="text-lg font-medium">
+                  <Label htmlFor="email" className="text-xl font-medium">
                     Email Address
                   </Label>
                   <Input
@@ -328,7 +417,7 @@ const QuizInterface = () => {
                 </div>
                 
                 <div className="space-y-3">
-                  <Label htmlFor="phone" className="text-lg font-medium">
+                  <Label htmlFor="phone" className="text-xl font-medium">
                     Phone Number
                   </Label>
                   <Input
@@ -348,10 +437,10 @@ const QuizInterface = () => {
             
             <div className="space-y-6">
               <div className="text-center lg:text-left">
-                <h3 className="text-2xl font-display font-semibold text-card-foreground mb-3">
+                <h3 className="text-3xl font-display font-semibold text-card-foreground mb-3">
                   Property Location
                 </h3>
-                <p className="text-lg text-muted-foreground">
+                <p className="text-xl text-muted-foreground">
                   {quizData.address || 'Enter an address to see it on the map'}
                 </p>
               </div>
@@ -367,6 +456,18 @@ const QuizInterface = () => {
         return null;
     }
   };
+
+  // Close suggestions when clicking outside
+  useEffect(() => {
+    const handleClickOutside = () => {
+      setShowSuggestions(false);
+    };
+
+    document.addEventListener('click', handleClickOutside);
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, []);
 
   return (
     <div className="min-h-screen relative overflow-hidden">
@@ -387,7 +488,7 @@ const QuizInterface = () => {
       
       {/* Content */}
       <div className="relative z-10 flex items-center justify-center min-h-screen p-4">
-        <div className={`w-full ${currentStep === 0 ? 'max-w-2xl' : 'max-w-6xl'}`}>
+        <div className={`w-full ${currentStep === 0 ? 'max-w-2xl' : 'max-w-7xl'}`}>
           {/* Quiz Card */}
           <Card className={`shadow-elegant backdrop-blur-sm ${
             currentStep === 0 
@@ -408,21 +509,6 @@ const QuizInterface = () => {
                   >
                     Back
                   </Button>
-                  
-                  <div className="flex space-x-2">
-                    {steps.map((_, index) => (
-                      <div
-                        key={index}
-                        className={`w-3 h-3 rounded-full transition-all ${
-                          index === currentStep
-                            ? 'bg-primary'
-                            : index < currentStep
-                            ? 'bg-secondary'
-                            : 'bg-muted'
-                        }`}
-                      />
-                    ))}
-                  </div>
                   
                   {currentStep === steps.length - 1 ? (
                     <Button
