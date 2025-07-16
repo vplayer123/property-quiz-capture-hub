@@ -1,73 +1,117 @@
-# Welcome to your Lovable project
 
-## Project info
+# Property Quiz App - CodeCanyon
 
-**URL**: https://lovable.dev/projects/dd4e7a91-e667-479e-8ef5-8ce80a122e8e
+A modern, responsive property finder quiz application with admin dashboard.
 
-## How can I edit this code?
+## Features
 
-There are several ways of editing your application.
+- **Interactive Quiz Interface**: Multi-step property finder with address autocomplete
+- **Admin Dashboard**: Manage content and export submissions
+- **Responsive Design**: Works on all devices
+- **Easy Installation**: Simple setup for shared hosting/cPanel
+- **CSV Export**: Download all submissions
+- **Dynamic Content**: Edit quiz text from admin panel
 
-**Use Lovable**
+## Installation Instructions
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/dd4e7a91-e667-479e-8ef5-8ce80a122e8e) and start prompting.
+### Quick Installation (Shared Hosting/cPanel)
 
-Changes made via Lovable will be committed automatically to this repo.
+1. **Upload Files**
+   - Extract the zip file
+   - Upload all contents to your hosting's `public_html` directory
 
-**Use your preferred IDE**
+2. **Database Setup**
+   - Create a MySQL database in cPanel
+   - Open `public/api/config.php` and update database credentials:
+   ```php
+   define('DB_HOST', 'localhost');
+   define('DB_NAME', 'your_database_name');
+   define('DB_USER', 'your_username');
+   define('DB_PASS', 'your_password');
+   ```
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+3. **Install Database Tables**
+   - Visit `yourdomain.com/public/api/install.php`
+   - This will create the required tables automatically
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+4. **Configure Admin Access**
+   - Update admin credentials in `public/api/config.php`:
+   ```php
+   define('ADMIN_USER', 'admin');
+   define('ADMIN_PASS', 'your_secure_password');
+   ```
 
-Follow these steps:
+5. **Done!**
+   - Frontend: `yourdomain.com`
+   - Admin Panel: `yourdomain.com/public/admin/`
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+### File Structure
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+```
+/
+├── index.html                 # Main application
+├── install.php               # Installation guide
+├── public/
+│   ├── api/
+│   │   ├── config.php        # Database configuration
+│   │   ├── install.php       # Database installer
+│   │   ├── submit.php        # Handle form submissions
+│   │   └── get-content.php   # Dynamic content API
+│   ├── admin/
+│   │   └── index.php         # Admin dashboard
+│   └── assets/               # CSS, JS, images
+└── README.md
 ```
 
-**Edit a file directly in GitHub**
+## Admin Features
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+- **Content Management**: Edit all quiz text and titles
+- **Submissions Export**: Download all form submissions as CSV
+- **Dashboard**: View submission statistics
+- **Secure Login**: Password-protected admin area
 
-**Use GitHub Codespaces**
+## Browser Support
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+- Chrome (latest)
+- Firefox (latest)
+- Safari (latest)
+- Edge (latest)
+- Mobile browsers
 
-## What technologies are used for this project?
+## Requirements
 
-This project is built with:
+- PHP 7.0 or higher
+- MySQL 5.6 or higher
+- Web server (Apache/Nginx)
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## Customization
 
-## How can I deploy this project?
+### Styling
+- Edit `public/assets/index.css` for custom styling
+- All colors use CSS variables for easy theming
 
-Simply open [Lovable](https://lovable.dev/projects/dd4e7a91-e667-479e-8ef5-8ce80a122e8e) and click on Share -> Publish.
+### Content
+- Use the admin panel to edit quiz text
+- Or directly modify the `content_settings` database table
 
-## Can I connect a custom domain to my Lovable project?
+### Functionality
+- Main app logic is in `public/assets/index.js`
+- PHP APIs are in `public/api/` directory
 
-Yes, you can!
+## Support
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+For technical support, please contact us through CodeCanyon.
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+## License
+
+Regular License - For single end product
+Extended License - For multiple end products or resale
+
+## Changelog
+
+### Version 1.0.0
+- Initial release
+- Complete quiz functionality
+- Admin dashboard
+- CSV export feature
+- Dynamic content management

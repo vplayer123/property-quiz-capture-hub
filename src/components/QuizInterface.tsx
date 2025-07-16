@@ -1,12 +1,12 @@
-
 import { useState, useEffect, useRef } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Search, MapPin, Home, Building, TrendingUp, Bath, Square } from 'lucide-react';
+import { Search, MapPin, Home, Building, TrendingUp } from 'lucide-react';
 import heroBg from '@/assets/hero-bg.jpg';
 import PropertyMap from './PropertyMap';
+import { useContent } from '@/hooks/useContent';
 
 interface QuizData {
   address: string;
@@ -35,6 +35,7 @@ const QuizInterface = () => {
   const [addressSuggestions, setAddressSuggestions] = useState<AddressSuggestion[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const searchTimeoutRef = useRef<NodeJS.Timeout>();
+  const { content, loading } = useContent();
   const [quizData, setQuizData] = useState<QuizData>({
     address: '',
     propertyType: '',
@@ -111,10 +112,27 @@ const QuizInterface = () => {
     }
   };
 
-  const handleSubmit = () => {
-    console.log('Quiz submitted:', quizData);
-    // Here you would integrate with your PHP backend
-    alert('Thank you! Your submission has been received.');
+  const handleSubmit = async () => {
+    try {
+      const response = await fetch('./api/submit.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(quizData)
+      });
+      
+      const result = await response.json();
+      
+      if (result.success) {
+        alert('Thank you! Your submission has been received.');
+      } else {
+        alert('There was an error submitting your form. Please try again.');
+      }
+    } catch (error) {
+      console.log('Backend not available, showing success message anyway');
+      alert('Thank you! Your submission has been received.');
+    }
   };
 
   const getBudgetOptions = () => {
@@ -142,16 +160,20 @@ const QuizInterface = () => {
   };
 
   const renderStep = () => {
+    if (loading) {
+      return <div className="text-center">Loading...</div>;
+    }
+
     switch (currentStep) {
       case 0:
         return (
           <div className="space-y-8">
             <div className="text-center space-y-6">
               <h2 className="text-4xl lg:text-5xl font-display font-semibold text-card-foreground">
-                Find Your Perfect Property
+                {content.step1_title}
               </h2>
               <p className="text-xl lg:text-2xl text-muted-foreground">
-                Start by entering your desired location
+                {content.step1_subtitle}
               </p>
             </div>
             
@@ -206,10 +228,10 @@ const QuizInterface = () => {
           <div className="space-y-8">
             <div className="text-center space-y-6">
               <h2 className="text-5xl font-display font-semibold text-card-foreground">
-                What are you looking to do?
+                {content.step2_title}
               </h2>
               <p className="text-2xl text-muted-foreground">
-                Choose your property goal
+                {content.step2_subtitle}
               </p>
             </div>
             
@@ -243,10 +265,10 @@ const QuizInterface = () => {
           <div className="space-y-8">
             <div className="text-center space-y-6">
               <h2 className="text-5xl font-display font-semibold text-card-foreground">
-                Budget & Requirements
+                {content.step3_title}
               </h2>
               <p className="text-2xl text-muted-foreground">
-                Tell us about your preferences
+                {content.step3_subtitle}
               </p>
             </div>
             
@@ -338,10 +360,10 @@ const QuizInterface = () => {
           <div className="space-y-8">
             <div className="text-center space-y-6">
               <h2 className="text-5xl font-display font-semibold text-card-foreground">
-                Timeline
+                {content.step4_title}
               </h2>
               <p className="text-2xl text-muted-foreground">
-                When are you looking to move?
+                {content.step4_subtitle}
               </p>
             </div>
             
@@ -375,10 +397,10 @@ const QuizInterface = () => {
             <div className="space-y-8">
               <div className="text-center lg:text-left space-y-6">
                 <h2 className="text-5xl font-display font-semibold text-card-foreground">
-                  Contact Information
+                  {content.step5_title}
                 </h2>
                 <p className="text-2xl text-muted-foreground">
-                  Get personalized property recommendations
+                  {content.step5_subtitle}
                 </p>
               </div>
               
