@@ -521,9 +521,11 @@ const QuizInterface = () => {
       {/* Content */}
       <div className="relative z-10 flex items-center justify-center min-h-screen p-4">
         <div className={`w-full ${
-          currentStep === 0 || currentStep === steps.length - 1 
-            ? 'max-w-7xl' 
-            : 'max-w-4xl lg:max-w-[75%]'
+          currentStep === 0 
+            ? 'max-w-4xl lg:max-w-[75%]'
+            : currentStep === steps.length - 1 
+              ? 'max-w-7xl' 
+              : 'max-w-4xl lg:max-w-[75%]'
         }`}>
           {/* Quiz Card */}
           <Card className={`shadow-elegant backdrop-blur-sm ${

@@ -5,6 +5,7 @@ echo "Creating CodeCanyon package..."
 
 # Remove old package if exists
 rm -rf codecanyon-package
+rm -f codecanyon-package.zip
 
 # Create package directory structure
 mkdir -p codecanyon-package/public/api
@@ -115,10 +116,15 @@ find codecanyon-package -type f -name "*.css" -exec chmod 644 {} \;
 find codecanyon-package -type f -name "*.js" -exec chmod 644 {} \;
 find codecanyon-package -type d -exec chmod 755 {} \;
 
-echo "✅ CodeCanyon package created successfully in 'codecanyon-package' directory"
-echo "📁 Ready for upload to CodeCanyon!"
+# Create zip file for CodeCanyon
+echo "Creating zip file..."
+zip -r codecanyon-package.zip codecanyon-package/
+
+echo "✅ CodeCanyon package created successfully!"
+echo "📁 Package folder: codecanyon-package/"
+echo "📦 Zip file: codecanyon-package.zip"
 echo ""
 echo "Package contents:"
 ls -la codecanyon-package/
 echo ""
-echo "To test locally, upload the codecanyon-package contents to a web server."
+echo "Ready to upload codecanyon-package.zip to CodeCanyon!"
