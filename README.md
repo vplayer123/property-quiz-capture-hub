@@ -12,7 +12,26 @@ A modern, responsive property finder quiz application with admin dashboard.
 - **CSV Export**: Download all submissions
 - **Dynamic Content**: Edit quiz text from admin panel
 
-## Installation Instructions
+## For Developers - Creating Package
+
+To create the CodeCanyon distribution package:
+
+```bash
+# Build and package the application
+node create-package.js
+
+# Or use the convenience scripts:
+# Windows:
+package.bat
+
+# Unix/Linux/Mac:
+chmod +x package.sh
+./package.sh
+```
+
+This will create a `codecanyon-package` folder ready for distribution.
+
+## Installation Instructions for Buyers
 
 ### Quick Installation (Shared Hosting/cPanel)
 
@@ -49,17 +68,17 @@ A modern, responsive property finder quiz application with admin dashboard.
 
 ```
 /
-├── index.html                 # Main application
-├── install.php               # Installation guide
+├── index.html                # Main application entry
+├── install.php              # Installation guide
+├── dist/                    # Built React application
 ├── public/
 │   ├── api/
-│   │   ├── config.php        # Database configuration
-│   │   ├── install.php       # Database installer
-│   │   ├── submit.php        # Handle form submissions
-│   │   └── get-content.php   # Dynamic content API
-│   ├── admin/
-│   │   └── index.php         # Admin dashboard
-│   └── assets/               # CSS, JS, images
+│   │   ├── config.php       # Database configuration
+│   │   ├── install.php      # Database installer
+│   │   ├── submit.php       # Handle form submissions
+│   │   └── get-content.php  # Dynamic content API
+│   └── admin/
+│       └── index.php        # Admin dashboard
 └── README.md
 ```
 
@@ -87,7 +106,7 @@ A modern, responsive property finder quiz application with admin dashboard.
 ## Customization
 
 ### Styling
-- Edit `public/assets/index.css` for custom styling
+- Edit CSS files in `dist/assets/` for custom styling
 - All colors use CSS variables for easy theming
 
 ### Content
@@ -95,7 +114,7 @@ A modern, responsive property finder quiz application with admin dashboard.
 - Or directly modify the `content_settings` database table
 
 ### Functionality
-- Main app logic is in `public/assets/index.js`
+- Built React app is in `dist/` directory
 - PHP APIs are in `public/api/` directory
 
 ## Support
