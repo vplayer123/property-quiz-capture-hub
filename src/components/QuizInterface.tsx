@@ -454,6 +454,16 @@ const QuizInterface = () => {
                     })}
                   />
                 </div>
+
+                {/* Submit button below the form */}
+                <div className="pt-6">
+                  <Button
+                    onClick={handleSubmit}
+                    className="w-full px-8 h-14 text-lg bg-gradient-primary hover:bg-primary-hover"
+                  >
+                    Submit
+                  </Button>
+                </div>
               </div>
             </div>
             
@@ -510,7 +520,11 @@ const QuizInterface = () => {
       
       {/* Content */}
       <div className="relative z-10 flex items-center justify-center min-h-screen p-4">
-        <div className={`w-full ${currentStep === 0 ? 'max-w-2xl' : 'max-w-7xl'}`}>
+        <div className={`w-full ${
+          currentStep === 0 || currentStep === steps.length - 1 
+            ? 'max-w-7xl' 
+            : 'max-w-4xl lg:max-w-[75%]'
+        }`}>
           {/* Quiz Card */}
           <Card className={`shadow-elegant backdrop-blur-sm ${
             currentStep === 0 
@@ -521,7 +535,7 @@ const QuizInterface = () => {
               {renderStep()}
               
               {/* Navigation Buttons - Skip inline handling for front page */}
-              {currentStep !== 0 && (
+              {currentStep !== 0 && currentStep !== steps.length - 1 && (
                 <div className="flex justify-between items-center mt-12 pt-8 border-t border-border">
                   <Button
                     variant="outline"
@@ -532,21 +546,25 @@ const QuizInterface = () => {
                     Back
                   </Button>
                   
-                  {currentStep === steps.length - 1 ? (
-                    <Button
-                      onClick={handleSubmit}
-                      className="px-8 h-12 text-lg bg-gradient-primary hover:bg-primary-hover"
-                    >
-                      Submit
-                    </Button>
-                  ) : (
-                    <Button
-                      onClick={handleNext}
-                      className="px-8 h-12 text-lg bg-gradient-primary hover:bg-primary-hover"
-                    >
-                      Next
-                    </Button>
-                  )}
+                  <Button
+                    onClick={handleNext}
+                    className="px-8 h-12 text-lg bg-gradient-primary hover:bg-primary-hover"
+                  >
+                    Next
+                  </Button>
+                </div>
+              )}
+
+              {/* Special navigation for last step (contact + map) */}
+              {currentStep === steps.length - 1 && (
+                <div className="flex justify-between items-center mt-12 pt-8 border-t border-border">
+                  <Button
+                    variant="outline"
+                    onClick={handleBack}
+                    className="px-8 h-12 text-lg"
+                  >
+                    Back
+                  </Button>
                 </div>
               )}
             </CardContent>
