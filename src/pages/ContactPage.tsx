@@ -23,6 +23,7 @@ const ContactPage = () => {
   });
   const [address, setAddress] = useState('');
   const [submitting, setSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -71,32 +72,14 @@ const ContactPage = () => {
           emailData,
           EMAIL_CONFIG.PUBLIC_KEY
         );
-        
-        localStorage.removeItem('quizData');
-        toast({
-          title: "Success!",
-          description: "Thank you! Your submission has been received.",
-        });
-        navigate('/');
-      } else {
-        // Fallback: Show success message and log data to console
-        console.log('Quiz submission data:', finalData);
-        localStorage.removeItem('quizData');
-        toast({
-          title: "Success!",
-          description: "Thank you! Your submission has been received.",
-        });
-        navigate('/');
       }
+      
+      localStorage.removeItem('quizData');
+      setSubmitted(true);
+      
     } catch (error) {
       console.error('Submission error:', error);
-      // Still show success to user
-      localStorage.removeItem('quizData');
-      toast({
-        title: "Success!",
-        description: "Thank you! Your submission has been received.",
-      });
-      navigate('/');
+      setSubmitted(true);
     } finally {
       setSubmitting(false);
     }
@@ -106,85 +89,28 @@ const ContactPage = () => {
     navigate('/quiz/timeline');
   };
 
+  const handleNewQuiz = () => {
+    setSubmitted(false);
+    navigate('/');
+  };
+
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
       <div className="w-full max-w-7xl">
         <Card className="shadow-elegant bg-card border-border">
           <CardContent className="p-8 lg:p-12">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-              <div className="space-y-8">
-                <div className="text-center lg:text-left space-y-6">
-                  <h2 className="text-5xl font-display font-semibold text-card-foreground">
-                    Contact Information
-                  </h2>
-                  <p className="text-2xl text-muted-foreground">
-                    Get personalized property recommendations
-                  </p>
-                </div>
-                
-                <div className="space-y-6">
-                  <div className="space-y-3">
-                    <Label htmlFor="name" className="text-xl font-medium">
-                      Full Name *
-                    </Label>
-                    <Input
-                      id="name"
-                      placeholder="Enter your name"
-                      className="h-14 text-lg"
-                      value={contact.name}
-                      onChange={(e) => setContact({...contact, name: e.target.value})}
-                      required
-                    />
-                  </div>
-                  
-                  <div className="space-y-3">
-                    <Label htmlFor="email" className="text-xl font-medium">
-                      Email Address *
-                    </Label>
-                    <Input
-                      id="email"
-                      type="email"
-                      placeholder="Enter your email"
-                      className="h-14 text-lg"
-                      value={contact.email}
-                      onChange={(e) => setContact({...contact, email: e.target.value})}
-                      required
-                    />
-                  </div>
-                  
-                  <div className="space-y-3">
-                    <Label htmlFor="phone" className="text-xl font-medium">
-                      Phone Number
-                    </Label>
-                    <Input
-                      id="phone"
-                      type="tel"
-                      placeholder="Enter your phone number"
-                      className="h-14 text-lg"
-                      value={contact.phone}
-                      onChange={(e) => setContact({...contact, phone: e.target.value})}
-                    />
-                  </div>
-
-                  <div className="pt-6">
-                    <Button
-                      onClick={handleSubmit}
-                      disabled={submitting}
-                      className="w-full px-8 h-14 text-lg bg-gradient-primary hover:bg-primary-hover"
-                    >
-                      {submitting ? 'Submitting...' : 'Submit'}
-                    </Button>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="space-y-6">
-                <div className="text-center lg:text-left">
-                  <h3 className="text-3xl font-display font-semibold text-card-foreground mb-3">
-                    Property Location
+              {/* Map Section - Left on desktop, top on mobile */}
+              <div className="space-y-6 order-1 lg:order-1">
+                <div className="text-center lg:text-left space-y-4">
+                  <h3 className="text-3xl font-display font-semibold text-card-foreground">
+                    2 Results Found in This Location
                   </h3>
                   <p className="text-xl text-muted-foreground">
-                    {address || 'Enter an address to see it on the map'}
+                    {address || 'Location not specified'}
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    Fill in the form {window.innerWidth >= 1024 ? 'on the right side' : 'below'} to let our team contact you as soon as possible
                   </p>
                 </div>
                 <PropertyMap 
@@ -192,17 +118,114 @@ const ContactPage = () => {
                   className="h-80 lg:h-96" 
                 />
               </div>
+              
+              {/* Contact Form Section - Right on desktop, bottom on mobile */}
+              <div className="space-y-8 order-2 lg:order-2">
+                {!submitted ? (
+                  <>
+                    <div className="text-center lg:text-left space-y-6">
+                      <h2 className="text-5xl font-display font-semibold text-card-foreground">
+                        Contact Information
+                      </h2>
+                      <p className="text-2xl text-muted-foreground">
+                        Get personalized property recommendations
+                      </p>
+                    </div>
+                    
+                    <div className="space-y-6">
+                      <div className="space-y-3">
+                        <Label htmlFor="name" className="text-xl font-medium">
+                          Full Name *
+                        </Label>
+                        <Input
+                          id="name"
+                          placeholder="Enter your name"
+                          className="h-14 text-lg"
+                          value={contact.name}
+                          onChange={(e) => setContact({...contact, name: e.target.value})}
+                          required
+                        />
+                      </div>
+                      
+                      <div className="space-y-3">
+                        <Label htmlFor="email" className="text-xl font-medium">
+                          Email Address *
+                        </Label>
+                        <Input
+                          id="email"
+                          type="email"
+                          placeholder="Enter your email"
+                          className="h-14 text-lg"
+                          value={contact.email}
+                          onChange={(e) => setContact({...contact, email: e.target.value})}
+                          required
+                        />
+                      </div>
+                      
+                      <div className="space-y-3">
+                        <Label htmlFor="phone" className="text-xl font-medium">
+                          Phone Number
+                        </Label>
+                        <Input
+                          id="phone"
+                          type="tel"
+                          placeholder="Enter your phone number"
+                          className="h-14 text-lg"
+                          value={contact.phone}
+                          onChange={(e) => setContact({...contact, phone: e.target.value})}
+                        />
+                      </div>
+
+                      <div className="pt-6">
+                        <Button
+                          onClick={handleSubmit}
+                          disabled={submitting}
+                          className="w-full px-8 h-14 text-lg bg-gradient-primary hover:bg-primary-hover"
+                        >
+                          {submitting ? 'Submitting...' : 'Submit'}
+                        </Button>
+                      </div>
+                    </div>
+                  </>
+                ) : (
+                  /* Thank You Message */
+                  <div className="text-center space-y-8">
+                    <div className="space-y-6">
+                      <div className="w-20 h-20 mx-auto bg-green-100 rounded-full flex items-center justify-center">
+                        <svg className="w-10 h-10 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        </svg>
+                      </div>
+                      <h2 className="text-4xl font-display font-semibold text-card-foreground">
+                        Thank You!
+                      </h2>
+                      <p className="text-xl text-muted-foreground">
+                        Your submission has been received successfully. Our team will contact you soon with personalized property recommendations.
+                      </p>
+                    </div>
+                    
+                    <Button
+                      onClick={handleNewQuiz}
+                      className="px-8 h-14 text-lg bg-gradient-primary hover:bg-primary-hover"
+                    >
+                      Start New Quiz
+                    </Button>
+                  </div>
+                )}
+              </div>
             </div>
 
-            <div className="flex justify-between items-center mt-12 pt-8 border-t border-border">
-              <Button
-                variant="outline"
-                onClick={handleBack}
-                className="px-8 h-12 text-lg"
-              >
-                Back
-              </Button>
-            </div>
+            {!submitted && (
+              <div className="flex justify-between items-center mt-12 pt-8 border-t border-border">
+                <Button
+                  variant="outline"
+                  onClick={handleBack}
+                  className="px-8 h-12 text-lg"
+                >
+                  Back
+                </Button>
+              </div>
+            )}
           </CardContent>
         </Card>
       </div>

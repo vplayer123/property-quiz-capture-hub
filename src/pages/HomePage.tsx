@@ -1,10 +1,8 @@
-
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Search, MapPin } from 'lucide-react';
 import heroBg from '@/assets/hero-bg.jpg';
 
@@ -93,17 +91,14 @@ const HomePage = () => {
               <div className="space-y-8">
                 <div className="text-center space-y-6">
                   <h1 className="text-4xl lg:text-5xl font-display font-semibold text-card-foreground">
-                    Find Your Perfect Property Match
+                    Buy, Sell or Rent Your Property With Us
                   </h1>
                   <p className="text-xl lg:text-2xl text-muted-foreground">
-                    Take our quick quiz to discover properties tailored to your needs
+                    Enter the area you want in the search bar and click next
                   </p>
                 </div>
                 
                 <div className="space-y-6">
-                  <Label htmlFor="address" className="text-lg font-medium block">
-                    Enter Address or Area
-                  </Label>
                   <div className="flex gap-4 relative">
                     <div className="relative flex-1">
                       <Search className="absolute left-4 top-4 h-6 w-6 text-muted-foreground" />
@@ -136,12 +131,9 @@ const HomePage = () => {
                       disabled={!address.trim()}
                       className="px-8 h-14 text-lg bg-gradient-primary hover:bg-primary-hover"
                     >
-                      Start Quiz
+                      Next
                     </Button>
                   </div>
-                  <p className="text-base text-muted-foreground">
-                    We'll show you properties in this area
-                  </p>
                 </div>
               </div>
             </CardContent>
