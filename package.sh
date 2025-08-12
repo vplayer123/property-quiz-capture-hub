@@ -1,115 +1,90 @@
 
 #!/bin/bash
 
-echo "🚀 Creating CodeCanyon package..."
+echo "🚀 Creating HTML Template Package for CodeCanyon..."
 
 # Remove old package if exists
-rm -rf codecanyon-package
-rm -f codecanyon-package.zip
+rm -rf html-template-package
+rm -f html-template-package.zip
 
 # Create package directory structure
-mkdir -p codecanyon-package
-mkdir -p codecanyon-package/public/api
-mkdir -p codecanyon-package/public/admin
-mkdir -p codecanyon-package/src
-mkdir -p codecanyon-package/documentation
+mkdir -p html-template-package
+mkdir -p html-template-package/documentation
 
-echo "📁 Copying public files..."
-# Copy public directory
-cp -r public/* codecanyon-package/public/ 2>/dev/null || true
+echo "📦 Building the React application..."
+# Build the React app
+npm run build
 
-echo "📁 Copying source files..."
-# Copy src directory
-cp -r src/* codecanyon-package/src/ 2>/dev/null || true
+echo "📁 Copying built files..."
+# Copy the built application
+cp -r dist/* html-template-package/ 2>/dev/null || true
 
-echo "📁 Copying root files..."
-# Copy root files
-cp index.html codecanyon-package/ 2>/dev/null || true
-cp package.json codecanyon-package/ 2>/dev/null || true
-cp tailwind.config.ts codecanyon-package/ 2>/dev/null || true
-cp vite.config.ts codecanyon-package/ 2>/dev/null || true
-cp tsconfig*.json codecanyon-package/ 2>/dev/null || true
-cp components.json codecanyon-package/ 2>/dev/null || true
-cp postcss.config.js codecanyon-package/ 2>/dev/null || true
+echo "📁 Copying assets..."
+# Copy source assets for customization
+mkdir -p html-template-package/src-assets
+cp -r src/assets/* html-template-package/src-assets/ 2>/dev/null || true
 
-echo "📝 Creating documentation..."
-# Create comprehensive documentation
-cat > codecanyon-package/documentation/README.md << 'EOF'
-# Property Quiz Capture Hub - CodeCanyon
+echo "📝 Creating comprehensive documentation..."
+
+# Create main README
+cat > html-template-package/documentation/README.md << 'EOF'
+# Property Quiz HTML Template - CodeCanyon
 
 ## 🏠 Description
-A modern, responsive property quiz application built with React, TypeScript, and Tailwind CSS. Perfect for real estate websites, property management companies, and lead generation campaigns.
+A modern, responsive property quiz landing page built with React and compiled to pure HTML/CSS/JS. Perfect for real estate websites, property management companies, and lead generation campaigns.
 
 ## ✨ Features
 - ✅ Multi-step property quiz with smooth navigation
-- ✅ Responsive design for all devices (mobile-first)
-- ✅ Admin dashboard with content management
-- ✅ CSV export functionality for lead data
-- ✅ MySQL database integration
+- ✅ Fully responsive design (mobile-first)
+- ✅ Email submission via EmailJS (no backend required)
+- ✅ Address autocomplete integration
 - ✅ Clean, modern UI with Tailwind CSS
-- ✅ Address autocomplete integration ready
-- ✅ Secure admin authentication
-- ✅ Easy content editing without code changes
+- ✅ Different colors for Buy/Sell/Rent options
+- ✅ Interactive property map display
+- ✅ Easy customization options
+- ✅ Fast loading and SEO optimized
 
 ## 🔧 Requirements
-- PHP 7.4 or higher
-- MySQL 5.7 or higher
-- Apache/Nginx web server
+- Any web hosting service (shared hosting works fine)
 - Modern web browser
-- cPanel or similar hosting control panel
+- EmailJS account (free tier available)
 
-## 🚀 Quick Installation
+## 🚀 Quick Setup
 
 ### Step 1: Upload Files
-1. Extract the `codecanyon-package.zip` file
-2. Upload ALL contents to your web server root directory or subdirectory
-3. Ensure all folders maintain their structure
+1. Extract the `html-template-package.zip` file
+2. Upload ALL contents to your web server
+3. Your quiz will be accessible immediately
 
-### Step 2: Database Setup
-1. Create a new MySQL database in cPanel
-2. Visit `yoursite.com/install.php` in your browser
-3. Follow the installation wizard
-4. Enter your database credentials when prompted
+### Step 2: Email Configuration
+1. Sign up for a free EmailJS account at https://www.emailjs.com/
+2. Create a new service (Gmail, Outlook, etc.)
+3. Create an email template
+4. Update the configuration in the files (see setup guide)
 
-### Step 3: Admin Configuration
-1. Set your admin username and password during installation
-2. **Important**: Delete `install.php` after successful installation
-3. Access admin panel at `yoursite.com/public/admin/`
+### Step 3: Test Your Quiz
+1. Visit your website
+2. Complete the quiz to test email delivery
+3. Check your admin email for submissions
 
-## 📋 Default Structure
+## 📋 File Structure
 ```
 /
-├── index.html              # Main application entry
-├── install.php            # Installation wizard
-├── src/                   # React source files
-├── public/
-│   ├── api/               # PHP backend files
-│   │   ├── config.php     # Database configuration
-│   │   ├── submit.php     # Form submission handler
-│   │   └── admin-*.php    # Admin API endpoints
-│   └── admin/
-│       └── index.php      # Admin dashboard entry
-└── documentation/         # Complete documentation
+├── index.html              # Main quiz page
+├── assets/                 # CSS, JS, and images
+│   ├── css/
+│   ├── js/
+│   └── images/
+├── src-assets/             # Original source images for customization
+└── documentation/          # Setup and customization guides
 ```
 
-## 🎛️ Admin Features
-- **Content Management**: Edit all quiz text and descriptions
-- **Lead Management**: View all form submissions with filtering
-- **CSV Export**: Download leads for CRM integration
-- **Statistics Dashboard**: View submission analytics
-- **Secure Access**: Password-protected admin area
-
-## 🎨 Customization
-- **Colors**: Edit CSS variables in `src/index.css`
-- **Content**: Use admin panel to edit all quiz text
-- **Layout**: Modify React components in `src/pages/`
-- **Styling**: Built with Tailwind CSS for easy customization
-
-## 🔒 Security Features
-- SQL injection protection with prepared statements
-- Admin session management
-- XSS protection on all inputs
-- Secure file permissions recommended
+## 🎨 Customization Options
+- **Colors**: Easy CSS variable customization
+- **Content**: Direct HTML text editing
+- **Images**: Replace hero background and assets
+- **Email Template**: Customize submission format
+- **Styling**: Built with Tailwind CSS
 
 ## 📱 Browser Support
 - ✅ Chrome (latest)
@@ -128,260 +103,165 @@ For technical support and customization requests, please contact through CodeCan
 ## 📈 Changelog
 ### Version 1.0.0
 - Initial CodeCanyon release
-- Complete quiz functionality
-- Admin dashboard with content management
+- Complete property quiz functionality
+- EmailJS integration for submissions
 - Mobile-responsive design
-- CSV export feature
-- Secure admin authentication
+- Different colored icons for property types
+- Interactive map integration
 EOF
 
-cat > codecanyon-package/documentation/INSTALLATION.md << 'EOF'
-# 🚀 Installation Guide
+# Create setup guide
+cat > html-template-package/documentation/SETUP.md << 'EOF'
+# 🚀 Setup Guide
 
-## Quick Start (Recommended)
-The fastest way to get your Property Quiz running on shared hosting.
+## Quick Start (5 Minutes)
+Get your Property Quiz running with email submissions.
 
-### 1. Upload Files
-- Extract `codecanyon-package.zip`
-- Upload ALL files to your hosting directory (usually `public_html`)
-- Maintain folder structure during upload
+### 1. Upload to Your Server
+- Extract the package files
+- Upload everything to your hosting directory
+- Your quiz is now live!
 
-### 2. Run Installation Wizard
-- Visit `yourdomain.com/install.php`
-- Enter your database details
-- Set admin credentials
-- Click "Install"
+### 2. Configure Email Submissions
 
-### 3. Complete Setup
-- Delete `install.php` file for security
-- Visit your quiz at `yourdomain.com`
-- Access admin at `yourdomain.com/public/admin/`
+#### EmailJS Setup (Free)
+1. Go to https://www.emailjs.com/ and create a free account
+2. Add an email service (Gmail, Outlook, etc.)
+3. Create a new email template with these variables:
+   - `{{to_email}}` - Admin email
+   - `{{subject}}` - Email subject
+   - `{{message}}` - Quiz results
 
-## Manual Installation
+#### Update Configuration
+Edit the JavaScript file in `assets/js/` and find the EmailJS configuration:
 
-### Database Setup
-If you prefer manual setup, create these tables:
-
-```sql
-CREATE DATABASE property_quiz;
-USE property_quiz;
-
-CREATE TABLE quiz_submissions (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    address TEXT NOT NULL,
-    property_type VARCHAR(10) NOT NULL,
-    budget VARCHAR(50),
-    bedrooms VARCHAR(10),
-    bathrooms VARCHAR(10),
-    property_size VARCHAR(50),
-    amenities TEXT,
-    timeline VARCHAR(50),
-    contact_name VARCHAR(100) NOT NULL,
-    contact_email VARCHAR(100) NOT NULL,
-    contact_phone VARCHAR(20),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE TABLE content_settings (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    content_key VARCHAR(100) UNIQUE NOT NULL,
-    content_value TEXT NOT NULL,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-);
-
-INSERT INTO content_settings (content_key, content_value) VALUES
-('step1_title', 'Find Your Perfect Property'),
-('step1_subtitle', 'Start by entering your desired location'),
-('step2_title', 'What are you looking to do?'),
-('step2_subtitle', 'Choose your property goal'),
-('step3_title', 'Budget & Requirements'),
-('step3_subtitle', 'Tell us about your preferences'),
-('step4_title', 'Timeline'),
-('step4_subtitle', 'When are you looking to move?'),
-('step5_title', 'Contact Information'),
-('step5_subtitle', 'Get personalized property recommendations');
-```
-
-### Configure Database
-Edit `public/api/config.php`:
-```php
-define('DB_HOST', 'localhost');
-define('DB_NAME', 'your_database_name');
-define('DB_USER', 'your_username');
-define('DB_PASS', 'your_password');
-
-define('ADMIN_USER', 'admin');
-define('ADMIN_PASS', 'your_secure_password');
-```
-
-## Troubleshooting
-
-### Common Issues
-
-**Database Connection Failed**
-- Verify database credentials in config.php
-- Ensure MySQL service is running
-- Check if database exists
-
-**Blank Page/500 Error**
-- Check PHP error logs in cPanel
-- Verify PHP version is 7.4+
-- Check file permissions (755 for directories, 644 for files)
-
-**Admin Login Issues**
-- Clear browser cache
-- Check credentials in config.php
-- Verify sessions are enabled in PHP
-
-### File Permissions
-```bash
-# Set proper permissions
-find . -type d -exec chmod 755 {} \;
-find . -type f -exec chmod 644 {} \;
-chmod 755 public/api/
-```
-
-### Server Requirements Check
-- PHP 7.4+ with PDO, PDO_MySQL extensions
-- MySQL 5.7+ or MariaDB equivalent
-- Web server (Apache/Nginx)
-- At least 50MB disk space
-EOF
-
-cat > codecanyon-package/documentation/CUSTOMIZATION.md << 'EOF'
-# 🎨 Customization Guide
-
-## Content Management
-The easiest way to customize your quiz is through the admin dashboard.
-
-### Editing Quiz Content
-1. Login to admin panel: `yourdomain.com/public/admin/`
-2. Go to "Content Management" tab
-3. Edit titles and descriptions for each step
-4. Click "Save Changes"
-
-### Available Content Fields
-- **Step 1**: Address search page
-- **Step 2**: Property type selection
-- **Step 3**: Budget and requirements
-- **Step 4**: Timeline preferences
-- **Step 5**: Contact information
-
-## Visual Customization
-
-### Colors and Branding
-Edit `src/index.css` to change colors:
-```css
-:root {
-  --primary: 220 50% 50%;        /* Main brand color */
-  --secondary: 220 20% 90%;      /* Secondary color */
-  --accent: 120 50% 50%;         /* Accent color */
-  /* Customize these values */
-}
-```
-
-### Layout Modifications
-- Quiz step widths are responsive (60% on desktop, full on mobile)
-- Containers use Tailwind CSS classes
-- Easy to modify breakpoints and spacing
-
-## Database Customization
-
-### Adding New Form Fields
-1. Update database schema:
-```sql
-ALTER TABLE quiz_submissions ADD COLUMN new_field VARCHAR(100);
-```
-
-2. Modify form components in `src/pages/`
-3. Update `public/api/submit.php` to handle new field
-
-### Custom Validation
-Add validation in React components:
 ```javascript
-const validateField = (value) => {
-  if (!value) return "Field is required";
-  // Add custom validation logic
-  return null;
+// Replace these with your EmailJS credentials
+const EMAIL_CONFIG = {
+  SERVICE_ID: 'your_service_id',     // From EmailJS dashboard
+  TEMPLATE_ID: 'your_template_id',   // From EmailJS dashboard  
+  PUBLIC_KEY: 'your_public_key',     // From EmailJS dashboard
+  ADMIN_EMAIL: 'admin@yourdomain.com' // Your email address
 };
 ```
 
-## Advanced Customization
+#### Email Template Example
+Create this template in EmailJS:
 
-### Email Notifications
-Integrate PHPMailer in `submit.php`:
-```php
-// After saving to database
-require_once 'phpmailer/PHPMailer.php';
-$mail = new PHPMailer();
-$mail->setFrom('noreply@yourdomain.com');
-$mail->addAddress($email);
-$mail->Subject = 'Property Quiz Submission';
-$mail->Body = 'Thank you for your submission!';
-$mail->send();
+**Subject:** New Property Quiz Submission - {{subject}}
+
+**Body:**
+```
+New Property Quiz Submission
+
+Contact Information:
+{{message}}
+
+Please follow up with this lead promptly.
 ```
 
-### CRM Integration
-Send data to external CRM:
-```php
-// In submit.php after database save
-$crmData = json_encode([
-    'name' => $contactName,
-    'email' => $contactEmail,
-    'phone' => $contactPhone,
-    'property_type' => $propertyType
-]);
+### 3. Test Everything
+1. Complete the quiz on your website
+2. Check your email for the submission
+3. If no email arrives, check EmailJS logs
 
-$ch = curl_init();
-curl_setopt($ch, CURLOPT_URL, 'https://your-crm.com/api/leads');
-curl_setopt($ch, CURLOPT_POSTFIELDS, $crmData);
-curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
-curl_exec($ch);
+## Hosting Recommendations
+- **Shared Hosting**: Works perfectly (GoDaddy, Bluehost, etc.)
+- **Cloud Hosting**: AWS, Google Cloud, DigitalOcean
+- **CDN**: Cloudflare for faster loading
+- **Free Options**: Netlify, Vercel (great for testing)
+
+## SSL Certificate
+For production use, ensure your hosting has SSL enabled for security.
+EOF
+
+# Create customization guide
+cat > html-template-package/documentation/CUSTOMIZATION.md << 'EOF'
+# 🎨 Customization Guide
+
+## Quick Customizations
+
+### Change Colors
+Edit the CSS variables in `assets/css/main.css`:
+
+```css
+:root {
+  --primary: 220 50% 50%;        /* Main brand color */
+  --primary-foreground: 0 0% 98%;
+  --secondary: 220 20% 90%;      
+  --accent: 120 50% 50%;         
+}
 ```
 
-### Frontend Development
-If you want to modify React components:
-```bash
-# Install dependencies
-npm install
+### Update Content
+Edit text directly in `index.html`:
 
-# Development server
-npm run dev
+```html
+<!-- Quiz title -->
+<h1>Find Your Perfect Property Match</h1>
 
-# Build for production
-npm run build
+<!-- Subtitle -->
+<p>Take our quick quiz to discover properties tailored to your needs</p>
 ```
 
-## Security Enhancements
+### Replace Images
+1. Replace `assets/images/hero-bg.jpg` with your image
+2. Keep the same filename or update the CSS reference
+3. Recommended size: 1920x1080px
 
-### Admin Security
-- Change default credentials immediately
-- Use strong passwords
-- Enable HTTPS in production
-- Set session timeout
+### Admin Email
+Update your email address in the JavaScript configuration:
 
-### File Security
-- Remove `install.php` after setup
-- Set proper file permissions
-- Disable directory browsing
-- Keep database credentials secure
+```javascript
+ADMIN_EMAIL: 'your-email@domain.com'
+```
 
-## Performance Optimization
+## Advanced Customizations
 
-### Frontend
-- Images are optimized and compressed
-- CSS and JS are minified in production
-- Lazy loading for better performance
+### Property Type Colors
+The icons have different colors by default:
+- **Rent**: Orange (#ea580c)
+- **Buy**: Blue (#2563eb) 
+- **Sell**: Green (#16a34a)
 
-### Backend
-- Database queries use prepared statements
-- Efficient indexing on search fields
-- Connection pooling for high traffic
+To change these, edit the CSS classes in `assets/css/main.css`:
 
-## Integration Examples
+```css
+.rent-icon { color: #your-color; }
+.buy-icon { color: #your-color; }
+.sell-icon { color: #your-color; }
+```
+
+### Budget Ranges
+Edit the budget options in the JavaScript file:
+
+```javascript
+const budgetOptions = {
+  rent: [
+    { value: 'under-1000', label: 'Under $1,000/month' },
+    // Add your ranges here
+  ],
+  buy: [
+    { value: 'under-100k', label: 'Under $100,000' },
+    // Add your ranges here
+  ]
+};
+```
+
+### Add More Form Fields
+1. Add HTML input in `index.html`
+2. Update the JavaScript to capture the value
+3. Include in the email template
+
+### Styling Framework
+This template uses Tailwind CSS. You can:
+- Add custom CSS classes
+- Modify existing utility classes
+- Use the Tailwind CDN for additional utilities
 
 ### Google Analytics
-Add to `index.html`:
+Add tracking to `index.html`:
+
 ```html
 <!-- Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=GA_TRACKING_ID"></script>
@@ -394,427 +274,156 @@ Add to `index.html`:
 ```
 
 ### Facebook Pixel
-Add tracking for lead generation campaigns:
+Add conversion tracking:
+
 ```html
 <!-- Facebook Pixel -->
 <script>
-  !function(f,b,e,v,n,t,s)
-  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-  n.queue=[];t=b.createElement(e);t.async=!0;
-  t.src=v;s=b.getElementsByTagName(e)[0];
-  s.parentNode.insertBefore(t,s)}(window,document,'script',
-  'https://connect.facebook.net/en_US/fbevents.js');
   fbq('init', 'YOUR_PIXEL_ID');
   fbq('track', 'PageView');
+  // Track quiz completion
+  fbq('track', 'Lead');
 </script>
 ```
 
-## Support and Updates
-For additional customization help, please contact through CodeCanyon messaging system.
+## Development Setup
+If you want to modify the React source:
+
+1. Install Node.js
+2. Run `npm install`
+3. Modify files in `src/`
+4. Run `npm run build`
+5. Upload the new `dist/` files
+
+## Support
+Need help with customizations? Contact through CodeCanyon for assistance.
 EOF
 
-echo "📦 Creating installation wizard..."
-# Create installation wizard
-cat > codecanyon-package/install.php << 'EOF'
-<?php
-session_start();
+echo "📋 Creating example email template..."
+# Create email template example
+cat > html-template-package/documentation/EMAIL-TEMPLATE.md << 'EOF'
+# 📧 Email Template Setup
 
-$step = isset($_GET['step']) ? (int)$_GET['step'] : 1;
-$errors = [];
-$success = false;
+## EmailJS Template Configuration
 
-// Database configuration defaults
-$db_config = [
-    'host' => 'localhost',
-    'name' => '',
-    'user' => '',
-    'pass' => ''
-];
+### Template Variables
+Your EmailJS template should include these variables:
 
-$admin_config = [
-    'user' => 'admin',
-    'pass' => ''
-];
+- `{{to_email}}` - Recipient email
+- `{{subject}}` - Email subject line  
+- `{{message}}` - Formatted quiz results
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if ($step === 1) {
-        // Validate database connection
-        $db_config['host'] = trim($_POST['db_host'] ?? '');
-        $db_config['name'] = trim($_POST['db_name'] ?? '');
-        $db_config['user'] = trim($_POST['db_user'] ?? '');
-        $db_config['pass'] = $_POST['db_pass'] ?? '';
-        
-        try {
-            $pdo = new PDO("mysql:host={$db_config['host']}", $db_config['user'], $db_config['pass']);
-            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            
-            // Try to create database
-            $pdo->exec("CREATE DATABASE IF NOT EXISTS `{$db_config['name']}`");
-            $pdo->exec("USE `{$db_config['name']}`");
-            
-            $_SESSION['db_config'] = $db_config;
-            $step = 2;
-        } catch (Exception $e) {
-            $errors[] = "Database connection failed: " . $e->getMessage();
-        }
-    } else if ($step === 2) {
-        // Install database and create config
-        $db_config = $_SESSION['db_config'];
-        $admin_config['user'] = trim($_POST['admin_user'] ?? '');
-        $admin_config['pass'] = trim($_POST['admin_pass'] ?? '');
-        
-        if (empty($admin_config['user']) || empty($admin_config['pass'])) {
-            $errors[] = "Admin username and password are required";
-        } else {
-            try {
-                $pdo = new PDO("mysql:host={$db_config['host']};dbname={$db_config['name']}", $db_config['user'], $db_config['pass']);
-                $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                
-                // Create tables
-                $sql = "
-                CREATE TABLE IF NOT EXISTS quiz_submissions (
-                    id INT AUTO_INCREMENT PRIMARY KEY,
-                    address TEXT NOT NULL,
-                    property_type VARCHAR(10) NOT NULL,
-                    budget VARCHAR(50),
-                    bedrooms VARCHAR(10),
-                    bathrooms VARCHAR(10),
-                    property_size VARCHAR(50),
-                    amenities TEXT,
-                    timeline VARCHAR(50),
-                    contact_name VARCHAR(100) NOT NULL,
-                    contact_email VARCHAR(100) NOT NULL,
-                    contact_phone VARCHAR(20),
-                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-                );
+### Recommended Template
 
-                CREATE TABLE IF NOT EXISTS content_settings (
-                    id INT AUTO_INCREMENT PRIMARY KEY,
-                    content_key VARCHAR(100) UNIQUE NOT NULL,
-                    content_value TEXT NOT NULL,
-                    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-                );
+**Subject Line:**
+```
+New Property Quiz Submission - {{subject}}
+```
 
-                INSERT IGNORE INTO content_settings (content_key, content_value) VALUES
-                ('step1_title', 'Find Your Perfect Property'),
-                ('step1_subtitle', 'Start by entering your desired location'),
-                ('step2_title', 'What are you looking to do?'),
-                ('step2_subtitle', 'Choose your property goal'),
-                ('step3_title', 'Budget & Requirements'),
-                ('step3_subtitle', 'Tell us about your preferences'),
-                ('step4_title', 'Timeline'),
-                ('step4_subtitle', 'When are you looking to move?'),
-                ('step5_title', 'Contact Information'),
-                ('step5_subtitle', 'Get personalized property recommendations');
-                ";
-                
-                $pdo->exec($sql);
-                
-                // Create config file
-                $config_content = "<?php
-// Database configuration
-define('DB_HOST', '{$db_config['host']}');
-define('DB_NAME', '{$db_config['name']}');
-define('DB_USER', '{$db_config['user']}');
-define('DB_PASS', '{$db_config['pass']}');
+**Email Body:**
+```
+Hello,
 
-// Admin credentials  
-define('ADMIN_USER', '{$admin_config['user']}');
-define('ADMIN_PASS', '{$admin_config['pass']}');
+You have received a new property quiz submission:
 
-// Site configuration
-define('SITE_NAME', 'Property Quiz App');
-define('SITE_URL', 'http://' . \$_SERVER['HTTP_HOST']);
+{{message}}
 
-// Database connection
-try {
-    \$pdo = new PDO(\"mysql:host=\" . DB_HOST . \";dbname=\" . DB_NAME, DB_USER, DB_PASS);
-    \$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch(PDOException \$e) {
-    die(\"Connection failed: \" . \$e->getMessage());
-}
-?>";
-                
-                if (!is_dir('public/api')) {
-                    mkdir('public/api', 0755, true);
-                }
-                
-                file_put_contents('public/api/config.php', $config_content);
-                
-                $success = true;
-                session_destroy();
-            } catch (Exception $e) {
-                $errors[] = "Installation failed: " . $e->getMessage();
-            }
-        }
-    }
-}
-?>
+---
+This email was sent from your Property Quiz form.
+Please respond to the customer promptly.
+
+Best regards,
+Your Property Quiz System
+```
+
+### Alternative Template (HTML)
+For a more styled email:
+
+```html
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Property Quiz - Installation Wizard</title>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { 
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-        .container {
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-            max-width: 600px;
-            width: 100%;
-            overflow: hidden;
-        }
-        .header {
-            background: #4f46e5;
-            color: white;
-            padding: 30px;
-            text-align: center;
-        }
-        .header h1 { font-size: 24px; margin-bottom: 10px; }
-        .header p { opacity: 0.9; }
-        .content { padding: 40px; }
-        .step-indicator {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 30px;
-        }
-        .step {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: #e5e7eb;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 10px;
-            font-weight: bold;
-            position: relative;
-        }
-        .step.active { background: #4f46e5; color: white; }
-        .step.completed { background: #10b981; color: white; }
-        .step:not(:last-child):after {
-            content: '';
-            position: absolute;
-            left: 100%;
-            top: 50%;
-            width: 20px;
-            height: 2px;
-            background: #e5e7eb;
-            transform: translateY(-50%);
-        }
-        .form-group { margin-bottom: 20px; }
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: #374151;
-        }
-        .form-group input, .form-group select {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #e5e7eb;
-            border-radius: 6px;
-            font-size: 14px;
-            transition: border-color 0.2s;
-        }
-        .form-group input:focus, .form-group select:focus {
-            outline: none;
-            border-color: #4f46e5;
-        }
-        .btn {
-            background: #4f46e5;
-            color: white;
-            padding: 12px 30px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: 600;
-            transition: background 0.2s;
-            width: 100%;
-        }
-        .btn:hover { background: #4338ca; }
-        .error {
-            background: #fef2f2;
-            border: 1px solid #fecaca;
-            color: #dc2626;
-            padding: 12px;
-            border-radius: 6px;
-            margin-bottom: 20px;
-        }
-        .success {
-            background: #f0fdf4;
-            border: 1px solid #bbf7d0;
-            color: #166534;
-            padding: 20px;
-            border-radius: 6px;
-            text-align: center;
-        }
-        .success h3 { margin-bottom: 15px; }
-        .success ul { text-align: left; margin: 15px 0; }
-        .success a { color: #4f46e5; text-decoration: none; font-weight: 600; }
-        .success a:hover { text-decoration: underline; }
-        .info-box {
-            background: #eff6ff;
-            border: 1px solid #bfdbfe;
-            padding: 15px;
-            border-radius: 6px;
-            margin-bottom: 20px;
-            font-size: 14px;
-            color: #1e40af;
-        }
+        body { font-family: Arial, sans-serif; }
+        .header { background: #4f46e5; color: white; padding: 20px; }
+        .content { padding: 20px; }
+        .info { background: #f3f4f6; padding: 15px; margin: 10px 0; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>🏠 Property Quiz Installation</h1>
-            <p>Set up your property capture system in minutes</p>
+    <div class="header">
+        <h2>New Property Quiz Submission</h2>
+    </div>
+    <div class="content">
+        <div class="info">
+            {{message}}
         </div>
-        
-        <div class="content">
-            <?php if ($success): ?>
-                <div class="success">
-                    <h3>🎉 Installation Complete!</h3>
-                    <p>Your Property Quiz application has been successfully installed and configured.</p>
-                    
-                    <div style="margin: 20px 0; padding: 15px; background: #fef3c7; border: 1px solid #fbbf24; border-radius: 6px;">
-                        <strong>⚠️ Important Security Step:</strong><br>
-                        Please delete this <code>install.php</code> file immediately for security reasons.
-                    </div>
-                    
-                    <div style="text-align: left; margin: 20px 0;">
-                        <h4>📋 Your Admin Credentials:</h4>
-                        <ul>
-                            <li><strong>Username:</strong> <?php echo htmlspecialchars($admin_config['user']); ?></li>
-                            <li><strong>Password:</strong> <?php echo htmlspecialchars($admin_config['pass']); ?></li>
-                        </ul>
-                    </div>
-                    
-                    <div style="text-align: left; margin: 20px 0;">
-                        <h4>🚀 Next Steps:</h4>
-                        <ul>
-                            <li><a href="./">View your Property Quiz</a> - Test the front-end</li>
-                            <li><a href="public/admin/">Access Admin Dashboard</a> - Manage content & leads</li>
-                            <li>Customize content through the admin panel</li>
-                            <li>Review the documentation for advanced features</li>
-                        </ul>
-                    </div>
-                </div>
-            <?php else: ?>
-                <div class="step-indicator">
-                    <div class="step <?php echo $step >= 1 ? 'active' : ''; ?>">1</div>
-                    <div class="step <?php echo $step >= 2 ? 'active' : ''; ?>">2</div>
-                </div>
-                
-                <?php if (!empty($errors)): ?>
-                    <div class="error">
-                        <?php foreach ($errors as $error): ?>
-                            <p><?php echo htmlspecialchars($error); ?></p>
-                        <?php endforeach; ?>
-                    </div>
-                <?php endif; ?>
-                
-                <?php if ($step === 1): ?>
-                    <h2 style="margin-bottom: 20px;">Database Configuration</h2>
-                    <div class="info-box">
-                        <strong>📋 You'll need:</strong> Database name, username, password from your hosting control panel (cPanel, Plesk, etc.)
-                    </div>
-                    
-                    <form method="POST">
-                        <input type="hidden" name="step" value="1">
-                        
-                        <div class="form-group">
-                            <label>Database Host:</label>
-                            <input type="text" name="db_host" value="<?php echo htmlspecialchars($db_config['host']); ?>" required>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label>Database Name:</label>
-                            <input type="text" name="db_name" value="<?php echo htmlspecialchars($db_config['name']); ?>" required>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label>Database Username:</label>
-                            <input type="text" name="db_user" value="<?php echo htmlspecialchars($db_config['user']); ?>" required>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label>Database Password:</label>
-                            <input type="password" name="db_pass" value="<?php echo htmlspecialchars($db_config['pass']); ?>">
-                        </div>
-                        
-                        <button type="submit" class="btn">Test Connection & Continue</button>
-                    </form>
-                    
-                <?php elseif ($step === 2): ?>
-                    <h2 style="margin-bottom: 20px;">Admin Account Setup</h2>
-                    <div class="info-box">
-                        <strong>🔐 Create your admin account:</strong> This will be used to access the dashboard and manage your quiz content.
-                    </div>
-                    
-                    <form method="POST">
-                        <input type="hidden" name="step" value="2">
-                        
-                        <div class="form-group">
-                            <label>Admin Username:</label>
-                            <input type="text" name="admin_user" value="<?php echo htmlspecialchars($admin_config['user']); ?>" required>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label>Admin Password:</label>
-                            <input type="password" name="admin_pass" value="<?php echo htmlspecialchars($admin_config['pass']); ?>" required minlength="6">
-                            <small style="color: #6b7280;">Minimum 6 characters</small>
-                        </div>
-                        
-                        <button type="submit" class="btn">Complete Installation</button>
-                    </form>
-                <?php endif; ?>
-            <?php endif; ?>
-        </div>
+        <p>Please follow up with this lead promptly.</p>
     </div>
 </body>
 </html>
+```
+
+## Testing Your Template
+
+1. Complete the quiz with test data
+2. Check your email inbox
+3. Verify all information is formatted correctly
+4. Test from different devices
+
+## Troubleshooting
+
+**Not receiving emails?**
+- Check EmailJS dashboard for errors
+- Verify service configuration
+- Check spam folder
+- Ensure template variables match
+
+**Formatting issues?**
+- Test with simple text template first
+- Add HTML formatting gradually
+- Check for typos in variable names
+
+## Tips
+- Use a professional email address for admin email
+- Set up email filters to organize submissions
+- Consider auto-reply templates for customers
+- Monitor EmailJS usage limits (free tier: 200 emails/month)
 EOF
 
 echo "🔧 Setting proper file permissions..."
 # Set proper permissions
-find codecanyon-package -type d -exec chmod 755 {} \;
-find codecanyon-package -type f -exec chmod 644 {} \;
+find html-template-package -type d -exec chmod 755 {} \;
+find html-template-package -type f -exec chmod 644 {} \;
 
 echo "📦 Creating ZIP package for CodeCanyon..."
 # Create ZIP file
-cd codecanyon-package
-zip -r ../codecanyon-package.zip . -x "*.DS_Store" "*/.*" 
+cd html-template-package
+zip -r ../html-template-package.zip . -x "*.DS_Store" "*/.*"
 cd ..
 
-echo "🧹 Cleaning up temporary files..."
+echo "🧹 Cleaning up..."
 # Optional: Remove the directory after zipping (uncomment if desired)
-# rm -rf codecanyon-package
+# rm -rf html-template-package
 
 echo ""
-echo "✅ CodeCanyon package created successfully!"
-echo "📦 Package file: codecanyon-package.zip"
-echo "📁 Package folder: codecanyon-package/"
+echo "✅ HTML Template Package created successfully!"
+echo "📦 Package file: html-template-package.zip"
+echo "📁 Package folder: html-template-package/"
 echo ""
 echo "📋 Package includes:"
-echo "   - Complete React application"
-echo "   - PHP backend with admin panel"
-echo "   - Installation wizard (install.php)"
+echo "   - Complete HTML template (built from React)"
+echo "   - EmailJS integration for form submissions"
+echo "   - Responsive design with modern UI"
 echo "   - Comprehensive documentation"
-echo "   - All source files for customization"
+echo "   - Easy customization guides"
+echo "   - Email template examples"
 echo ""
 echo "🚀 Ready to upload to CodeCanyon!"
+echo ""
+echo "⚙️ Next steps:"
+echo "   1. Test the built template locally"
+echo "   2. Set up EmailJS account and update configuration"
+echo "   3. Customize colors and content as needed"
+echo "   4. Upload to CodeCanyon"
+EOF

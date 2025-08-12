@@ -7,7 +7,6 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Search, MapPin } from 'lucide-react';
 import heroBg from '@/assets/hero-bg.jpg';
-import { useContent } from '@/hooks/useContent';
 
 interface AddressSuggestion {
   display_name: string;
@@ -20,7 +19,6 @@ const HomePage = () => {
   const [addressSuggestions, setAddressSuggestions] = useState<AddressSuggestion[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const searchTimeoutRef = useRef<NodeJS.Timeout>();
-  const { content, loading } = useContent();
   const navigate = useNavigate();
 
   const searchAddresses = async (query: string) => {
@@ -79,14 +77,6 @@ const HomePage = () => {
     };
   }, []);
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">Loading...</div>
-      </div>
-    );
-  }
-
   return (
     <div className="min-h-screen relative overflow-hidden">
       <div 
@@ -97,16 +87,16 @@ const HomePage = () => {
       </div>
       
       <div className="relative z-10 flex items-center justify-center min-h-screen p-4">
-        <div className="w-full max-w-3xl lg:max-w-[60%]">
+        <div className="w-full max-w-2xl lg:max-w-[50%]">
           <Card className="shadow-elegant backdrop-blur-sm bg-gradient-card border-white/20">
             <CardContent className="p-8 lg:p-12">
               <div className="space-y-8">
                 <div className="text-center space-y-6">
-                  <h2 className="text-4xl lg:text-5xl font-display font-semibold text-card-foreground">
-                    Buy, Sell or Rent Your
-                  </h2>
+                  <h1 className="text-4xl lg:text-5xl font-display font-semibold text-card-foreground">
+                    Find Your Perfect Property Match
+                  </h1>
                   <p className="text-xl lg:text-2xl text-muted-foreground">
-                    {content.step1_subtitle}
+                    Take our quick quiz to discover properties tailored to your needs
                   </p>
                 </div>
                 
@@ -146,7 +136,7 @@ const HomePage = () => {
                       disabled={!address.trim()}
                       className="px-8 h-14 text-lg bg-gradient-primary hover:bg-primary-hover"
                     >
-                      Next
+                      Start Quiz
                     </Button>
                   </div>
                   <p className="text-base text-muted-foreground">

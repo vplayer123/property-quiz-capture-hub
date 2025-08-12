@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import { useContent } from '@/hooks/useContent';
 
 interface QuizData {
   address: string;
@@ -24,7 +23,6 @@ const RequirementsPage = () => {
     bathrooms: '',
     propertySize: ''
   });
-  const { content, loading } = useContent();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -76,14 +74,6 @@ const RequirementsPage = () => {
     navigate('/quiz/property-type');
   };
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">Loading...</div>
-      </div>
-    );
-  }
-
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
       <div className="w-full max-w-4xl lg:max-w-[75%]">
@@ -92,10 +82,10 @@ const RequirementsPage = () => {
             <div className="space-y-8">
               <div className="text-center space-y-6">
                 <h2 className="text-5xl font-display font-semibold text-card-foreground">
-                  {content.step3_title}
+                  Budget & Requirements
                 </h2>
                 <p className="text-2xl text-muted-foreground">
-                  {content.step3_subtitle}
+                  Tell us about your preferences
                 </p>
               </div>
               
