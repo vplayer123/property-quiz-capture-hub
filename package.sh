@@ -1,15 +1,15 @@
 
 #!/bin/bash
 
-echo "🚀 Creating HTML Template Package for CodeCanyon..."
+echo "🚀 Creating Property Quiz HTML Template Package for CodeCanyon..."
 
 # Remove old package if exists
-rm -rf html-template-package
-rm -f html-template-package.zip
+rm -rf property-quiz-template
+rm -f property-quiz-template.zip
 
 # Create package directory structure
-mkdir -p html-template-package
-mkdir -p html-template-package/documentation
+mkdir -p property-quiz-template
+mkdir -p property-quiz-template/documentation
 
 echo "📦 Building the React application..."
 # Build the React app
@@ -17,127 +17,45 @@ npm run build
 
 echo "📁 Copying built files..."
 # Copy the built application
-cp -r dist/* html-template-package/ 2>/dev/null || true
+cp -r dist/* property-quiz-template/ 2>/dev/null || true
 
 echo "📁 Copying assets..."
 # Copy source assets for customization
-mkdir -p html-template-package/src-assets
-cp -r src/assets/* html-template-package/src-assets/ 2>/dev/null || true
+mkdir -p property-quiz-template/src-assets
+cp -r src/assets/* property-quiz-template/src-assets/ 2>/dev/null || true
 
 echo "📝 Creating comprehensive documentation..."
 
 # Create main README
-cat > html-template-package/documentation/README.md << 'EOF'
-# Property Quiz HTML Template - CodeCanyon
-
-## 🏠 Description
-A modern, responsive property quiz landing page built with React and compiled to pure HTML/CSS/JS. Perfect for real estate websites, property management companies, and lead generation campaigns.
-
-## ✨ Features
-- ✅ Multi-step property quiz with smooth navigation
-- ✅ Fully responsive design (mobile-first)
-- ✅ Email submission via EmailJS (no backend required)
-- ✅ Address autocomplete integration
-- ✅ Clean, modern UI with Tailwind CSS
-- ✅ Different colors for Buy/Sell/Rent options
-- ✅ Interactive property map display
-- ✅ Easy customization options
-- ✅ Fast loading and SEO optimized
-
-## 🔧 Requirements
-- Any web hosting service (shared hosting works fine)
-- Modern web browser
-- EmailJS account (free tier available)
-
-## 🚀 Quick Setup
-
-### Step 1: Upload Files
-1. Extract the `html-template-package.zip` file
-2. Upload ALL contents to your web server
-3. Your quiz will be accessible immediately
-
-### Step 2: Email Configuration
-1. Sign up for a free EmailJS account at https://www.emailjs.com/
-2. Create a new service (Gmail, Outlook, etc.)
-3. Create an email template
-4. Update the configuration in the files (see setup guide)
-
-### Step 3: Test Your Quiz
-1. Visit your website
-2. Complete the quiz to test email delivery
-3. Check your admin email for submissions
-
-## 📋 File Structure
-```
-/
-├── index.html              # Main quiz page
-├── assets/                 # CSS, JS, and images
-│   ├── css/
-│   ├── js/
-│   └── images/
-├── src-assets/             # Original source images for customization
-└── documentation/          # Setup and customization guides
-```
-
-## 🎨 Customization Options
-- **Colors**: Easy CSS variable customization
-- **Content**: Direct HTML text editing
-- **Images**: Replace hero background and assets
-- **Email Template**: Customize submission format
-- **Styling**: Built with Tailwind CSS
-
-## 📱 Browser Support
-- ✅ Chrome (latest)
-- ✅ Firefox (latest)
-- ✅ Safari (latest)
-- ✅ Edge (latest)
-- ✅ Mobile browsers (iOS/Android)
-
-## 🆘 Support
-For technical support and customization requests, please contact through CodeCanyon.
-
-## 📄 License
-- **Regular License**: Single end product use
-- **Extended License**: Multiple end products or client work
-
-## 📈 Changelog
-### Version 1.0.0
-- Initial CodeCanyon release
-- Complete property quiz functionality
-- EmailJS integration for submissions
-- Mobile-responsive design
-- Different colored icons for property types
-- Interactive map integration
-EOF
+cp README.md property-quiz-template/documentation/
 
 # Create setup guide
-cat > html-template-package/documentation/SETUP.md << 'EOF'
-# 🚀 Setup Guide
+cat > property-quiz-template/documentation/SETUP.md << 'EOF'
+# 🚀 Property Quiz Setup Guide
 
 ## Quick Start (5 Minutes)
-Get your Property Quiz running with email submissions.
 
 ### 1. Upload to Your Server
-- Extract the package files
-- Upload everything to your hosting directory
-- Your quiz is now live!
+- Extract all files from the package
+- Upload everything to your hosting directory (e.g., public_html)
+- Your quiz is now live at your domain!
 
 ### 2. Configure Email Submissions
 
-#### EmailJS Setup (Free)
+#### EmailJS Setup (Free & Easy)
 1. Go to https://www.emailjs.com/ and create a free account
-2. Add an email service (Gmail, Outlook, etc.)
+2. Add an email service (Gmail, Outlook, Yahoo, etc.)
 3. Create a new email template with these variables:
-   - `{{to_email}}` - Admin email
-   - `{{subject}}` - Email subject
-   - `{{message}}` - Quiz results
+   - `{{to_email}}` - Admin email address
+   - `{{subject}}` - Email subject line
+   - `{{message}}` - Formatted quiz results
 
-#### Update Configuration
-Edit the JavaScript file in `assets/js/` and find the EmailJS configuration:
+#### Update Email Configuration
+Edit `assets/js/email-config.js` and replace with your EmailJS credentials:
 
 ```javascript
 // Replace these with your EmailJS credentials
-const EMAIL_CONFIG = {
+export const EMAIL_CONFIG = {
   SERVICE_ID: 'your_service_id',     // From EmailJS dashboard
   TEMPLATE_ID: 'your_template_id',   // From EmailJS dashboard  
   PUBLIC_KEY: 'your_public_key',     // From EmailJS dashboard
@@ -145,8 +63,8 @@ const EMAIL_CONFIG = {
 };
 ```
 
-#### Email Template Example
-Create this template in EmailJS:
+#### Sample Email Template
+Create this template in your EmailJS account:
 
 **Subject:** New Property Quiz Submission - {{subject}}
 
@@ -154,116 +72,127 @@ Create this template in EmailJS:
 ```
 New Property Quiz Submission
 
-Contact Information:
 {{message}}
 
 Please follow up with this lead promptly.
+
+---
+Sent from Property Quiz Landing Page
 ```
 
 ### 3. Test Everything
 1. Complete the quiz on your website
 2. Check your email for the submission
-3. If no email arrives, check EmailJS logs
+3. If no email arrives, check EmailJS dashboard for errors
 
 ## Hosting Recommendations
-- **Shared Hosting**: Works perfectly (GoDaddy, Bluehost, etc.)
-- **Cloud Hosting**: AWS, Google Cloud, DigitalOcean
-- **CDN**: Cloudflare for faster loading
-- **Free Options**: Netlify, Vercel (great for testing)
 
-## SSL Certificate
-For production use, ensure your hosting has SSL enabled for security.
+### Shared Hosting (Easiest)
+- **GoDaddy, Bluehost, Hostinger**: Perfect for beginners
+- **Upload files to public_html folder**
+- **No server configuration needed**
+
+### Cloud Hosting (Advanced)
+- **Netlify, Vercel**: Great for developers (free tiers available)
+- **AWS S3, Google Cloud**: Enterprise solutions
+- **Cloudflare Pages**: Fast global delivery
+
+### Domain & SSL
+- Ensure your hosting includes SSL certificate
+- Point your domain to the hosting directory
+- Quiz will be accessible at yourdomain.com
+
+## Troubleshooting
+
+**Quiz not loading?**
+- Check that index.html is in the root directory
+- Verify all asset files are uploaded correctly
+- Check browser console for any errors
+
+**Not receiving emails?**
+- Verify EmailJS configuration is correct
+- Check your spam/junk folder
+- Test with a different email address
+- Check EmailJS dashboard for delivery logs
+
+**Map not showing?**
+- Maps use OpenStreetMap (free, no API key needed)
+- Check internet connection
+- Verify JavaScript is enabled in browser
 EOF
 
 # Create customization guide
-cat > html-template-package/documentation/CUSTOMIZATION.md << 'EOF'
+cat > property-quiz-template/documentation/CUSTOMIZATION.md << 'EOF'
 # 🎨 Customization Guide
 
 ## Quick Customizations
 
+### Change Your Email Address
+Edit `assets/js/email-config.js`:
+```javascript
+ADMIN_EMAIL: 'your-email@yourdomain.com'
+```
+
+### Update Quiz Content
+Edit `index.html` directly to change:
+- Headlines and descriptions
+- Button text
+- Property types and options
+- Contact form labels
+
 ### Change Colors
-Edit the CSS variables in `assets/css/main.css`:
+The template uses CSS variables for easy theming. Edit the main CSS file:
 
 ```css
 :root {
-  --primary: 220 50% 50%;        /* Main brand color */
-  --primary-foreground: 0 0% 98%;
-  --secondary: 220 20% 90%;      
-  --accent: 120 50% 50%;         
+  --primary: 220 50% 50%;        /* Main brand color (blue) */
+  --buy-color: 220 70% 50%;      /* Buy option (blue) */
+  --sell-color: 120 60% 40%;     /* Sell option (green) */
+  --rent-color: 25 90% 50%;      /* Rent option (orange) */
 }
 ```
 
-### Update Content
-Edit text directly in `index.html`:
-
-```html
-<!-- Quiz title -->
-<h1>Find Your Perfect Property Match</h1>
-
-<!-- Subtitle -->
-<p>Take our quick quiz to discover properties tailored to your needs</p>
-```
-
-### Replace Images
+### Replace Hero Background
 1. Replace `assets/images/hero-bg.jpg` with your image
-2. Keep the same filename or update the CSS reference
-3. Recommended size: 1920x1080px
-
-### Admin Email
-Update your email address in the JavaScript configuration:
-
-```javascript
-ADMIN_EMAIL: 'your-email@domain.com'
-```
+2. Recommended size: 1920x1080px
+3. Keep the same filename or update CSS reference
 
 ## Advanced Customizations
 
-### Property Type Colors
-The icons have different colors by default:
-- **Rent**: Orange (#ea580c)
-- **Buy**: Blue (#2563eb) 
-- **Sell**: Green (#16a34a)
-
-To change these, edit the CSS classes in `assets/css/main.css`:
-
-```css
-.rent-icon { color: #your-color; }
-.buy-icon { color: #your-color; }
-.sell-icon { color: #your-color; }
-```
-
-### Budget Ranges
-Edit the budget options in the JavaScript file:
+### Property Budget Ranges
+Edit the JavaScript to modify budget options:
 
 ```javascript
+// In the main app file, find budgetOptions
 const budgetOptions = {
   rent: [
     { value: 'under-1000', label: 'Under $1,000/month' },
-    // Add your ranges here
+    { value: '1000-2000', label: '$1,000 - $2,000/month' },
+    // Add your custom ranges
   ],
   buy: [
-    { value: 'under-100k', label: 'Under $100,000' },
-    // Add your ranges here
+    { value: 'under-200k', label: 'Under $200,000' },
+    // Add your custom ranges
   ]
 };
 ```
 
 ### Add More Form Fields
-1. Add HTML input in `index.html`
-2. Update the JavaScript to capture the value
-3. Include in the email template
+1. Edit the contact form HTML in `index.html`
+2. Update the email template to include new fields
+3. Modify the JavaScript to capture additional data
 
-### Styling Framework
-This template uses Tailwind CSS. You can:
-- Add custom CSS classes
-- Modify existing utility classes
-- Use the Tailwind CDN for additional utilities
+### Styling Changes
+The template is built with Tailwind CSS:
+- Utility classes for spacing, colors, typography
+- Responsive design built-in
+- Easy to modify existing styles
 
-### Google Analytics
-Add tracking to `index.html`:
+### Google Analytics Integration
+Add tracking code to `index.html`:
 
 ```html
-<!-- Google Analytics -->
+<!-- Before closing </head> tag -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=GA_TRACKING_ID"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
@@ -277,153 +206,110 @@ Add tracking to `index.html`:
 Add conversion tracking:
 
 ```html
-<!-- Facebook Pixel -->
+<!-- Before closing </head> tag -->
 <script>
+  !function(f,b,e,v,n,t,s)
+  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+  n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];
+  s.parentNode.insertBefore(t,s)}(window, document,'script',
+  'https://connect.facebook.net/en_US/fbevents.js');
+  
   fbq('init', 'YOUR_PIXEL_ID');
   fbq('track', 'PageView');
+  
   // Track quiz completion
   fbq('track', 'Lead');
 </script>
 ```
 
-## Development Setup
-If you want to modify the React source:
+## Content Localization
 
-1. Install Node.js
-2. Run `npm install`
-3. Modify files in `src/`
-4. Run `npm run build`
-5. Upload the new `dist/` files
+### Multi-Language Support
+1. Duplicate `index.html` for each language (e.g., `index-es.html`)
+2. Translate all text content
+3. Update email templates for each language
+4. Link between language versions
+
+### Currency Changes
+Update budget options and display text to match your local currency:
+- Replace $ with your currency symbol
+- Adjust budget ranges for local market
+- Update number formatting if needed
+
+## Performance Optimization
+
+### Image Optimization
+- Compress hero background image
+- Use WebP format for better compression
+- Add loading="lazy" for images below fold
+
+### Caching
+- Enable browser caching on your hosting
+- Use CDN for faster global loading
+- Minimize HTTP requests
+
+## SEO Optimization
+
+### Meta Tags
+Update meta tags in `index.html`:
+```html
+<meta name="description" content="Find your perfect property with our interactive quiz">
+<meta name="keywords" content="property, real estate, buy, sell, rent">
+<meta property="og:title" content="Property Quiz - Find Your Perfect Home">
+```
+
+### Structured Data
+Add JSON-LD structured data for better search visibility.
 
 ## Support
 Need help with customizations? Contact through CodeCanyon for assistance.
 EOF
 
-echo "📋 Creating example email template..."
-# Create email template example
-cat > html-template-package/documentation/EMAIL-TEMPLATE.md << 'EOF'
-# 📧 Email Template Setup
-
-## EmailJS Template Configuration
-
-### Template Variables
-Your EmailJS template should include these variables:
-
-- `{{to_email}}` - Recipient email
-- `{{subject}}` - Email subject line  
-- `{{message}}` - Formatted quiz results
-
-### Recommended Template
-
-**Subject Line:**
-```
-New Property Quiz Submission - {{subject}}
-```
-
-**Email Body:**
-```
-Hello,
-
-You have received a new property quiz submission:
-
-{{message}}
-
----
-This email was sent from your Property Quiz form.
-Please respond to the customer promptly.
-
-Best regards,
-Your Property Quiz System
-```
-
-### Alternative Template (HTML)
-For a more styled email:
-
-```html
-<!DOCTYPE html>
-<html>
-<head>
-    <style>
-        body { font-family: Arial, sans-serif; }
-        .header { background: #4f46e5; color: white; padding: 20px; }
-        .content { padding: 20px; }
-        .info { background: #f3f4f6; padding: 15px; margin: 10px 0; }
-    </style>
-</head>
-<body>
-    <div class="header">
-        <h2>New Property Quiz Submission</h2>
-    </div>
-    <div class="content">
-        <div class="info">
-            {{message}}
-        </div>
-        <p>Please follow up with this lead promptly.</p>
-    </div>
-</body>
-</html>
-```
-
-## Testing Your Template
-
-1. Complete the quiz with test data
-2. Check your email inbox
-3. Verify all information is formatted correctly
-4. Test from different devices
-
-## Troubleshooting
-
-**Not receiving emails?**
-- Check EmailJS dashboard for errors
-- Verify service configuration
-- Check spam folder
-- Ensure template variables match
-
-**Formatting issues?**
-- Test with simple text template first
-- Add HTML formatting gradually
-- Check for typos in variable names
-
-## Tips
-- Use a professional email address for admin email
-- Set up email filters to organize submissions
-- Consider auto-reply templates for customers
-- Monitor EmailJS usage limits (free tier: 200 emails/month)
-EOF
-
 echo "🔧 Setting proper file permissions..."
 # Set proper permissions
-find html-template-package -type d -exec chmod 755 {} \;
-find html-template-package -type f -exec chmod 644 {} \;
+find property-quiz-template -type d -exec chmod 755 {} \;
+find property-quiz-template -type f -exec chmod 644 {} \;
 
 echo "📦 Creating ZIP package for CodeCanyon..."
 # Create ZIP file
-cd html-template-package
-zip -r ../html-template-package.zip . -x "*.DS_Store" "*/.*"
+cd property-quiz-template
+zip -r ../property-quiz-template.zip . -x "*.DS_Store" "*/.*"
 cd ..
 
 echo "🧹 Cleaning up..."
 # Optional: Remove the directory after zipping (uncomment if desired)
-# rm -rf html-template-package
+# rm -rf property-quiz-template
 
 echo ""
-echo "✅ HTML Template Package created successfully!"
-echo "📦 Package file: html-template-package.zip"
-echo "📁 Package folder: html-template-package/"
+echo "✅ Property Quiz HTML Template Package created successfully!"
+echo "📦 Package file: property-quiz-template.zip"
+echo "📁 Package folder: property-quiz-template/"
 echo ""
 echo "📋 Package includes:"
 echo "   - Complete HTML template (built from React)"
-echo "   - EmailJS integration for form submissions"
+echo "   - EmailJS integration for submissions"
 echo "   - Responsive design with modern UI"
+echo "   - Interactive property map"
+echo "   - Color-coded property types"
 echo "   - Comprehensive documentation"
 echo "   - Easy customization guides"
-echo "   - Email template examples"
 echo ""
 echo "🚀 Ready to upload to CodeCanyon!"
 echo ""
-echo "⚙️ Next steps:"
-echo "   1. Test the built template locally"
-echo "   2. Set up EmailJS account and update configuration"
-echo "   3. Customize colors and content as needed"
-echo "   4. Upload to CodeCanyon"
+echo "⚙️ Features:"
+echo "   ✅ No backend required"
+echo "   ✅ Easy email configuration"
+echo "   ✅ Mobile-responsive design"
+echo "   ✅ Fast loading performance"
+echo "   ✅ SEO optimized"
+echo "   ✅ Easy customization"
+echo ""
+echo "📧 Don't forget to:"
+echo "   1. Set up EmailJS account"
+echo "   2. Configure email settings"
+echo "   3. Test quiz submission"
+echo "   4. Customize colors and content"
 EOF
