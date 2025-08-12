@@ -103,7 +103,7 @@ const HomePage = () => {
               <div className="space-y-8">
                 <div className="text-center space-y-6">
                   <h2 className="text-4xl lg:text-5xl font-display font-semibold text-card-foreground">
-                    {content.step1_title}
+                    Buy, Sell or Rent Your
                   </h2>
                   <p className="text-xl lg:text-2xl text-muted-foreground">
                     {content.step1_subtitle}
