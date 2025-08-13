@@ -19,18 +19,102 @@ echo "📁 Copying built files..."
 # Copy the built application
 cp -r dist/* property-quiz-template/ 2>/dev/null || true
 
+# Ensure we have the main HTML file
+if [ ! -f "property-quiz-template/index.html" ]; then
+    echo "⚠️  index.html not found in build, copying from source..."
+    cp index.html property-quiz-template/
+fi
+
 echo "📁 Copying assets..."
 # Copy source assets for customization
 mkdir -p property-quiz-template/src-assets
 cp -r src/assets/* property-quiz-template/src-assets/ 2>/dev/null || true
 
+# Create email configuration file for users
+mkdir -p property-quiz-template/assets/js
+cat > property-quiz-template/assets/js/email-config.js << 'EMAIL_CONFIG_EOF'
+// EmailJS Configuration
+// Replace these with your EmailJS credentials from https://www.emailjs.com/
+export const EMAIL_CONFIG = {
+  SERVICE_ID: 'your_service_id',     // From EmailJS dashboard
+  TEMPLATE_ID: 'your_template_id',   // From EmailJS dashboard  
+  PUBLIC_KEY: 'your_public_key',     // From EmailJS dashboard
+  ADMIN_EMAIL: 'admin@yourdomain.com' // Your email address
+};
+
+// Initialize EmailJS (this will be called automatically)
+if (typeof emailjs !== 'undefined') {
+  emailjs.init(EMAIL_CONFIG.PUBLIC_KEY);
+}
+EMAIL_CONFIG_EOF
+
 echo "📝 Creating comprehensive documentation..."
 
 # Create main README
-cp README.md property-quiz-template/documentation/
+cat > property-quiz-template/README.md << 'README_EOF'
+# 🏠 Property Quiz HTML Template
+
+A modern, responsive property quiz template that helps real estate professionals capture leads by engaging visitors with an interactive property matching quiz.
+
+## ✨ Features
+
+- **Interactive Property Quiz**: Multi-step quiz to match users with properties
+- **Email Integration**: Automatic email notifications via EmailJS
+- **Responsive Design**: Works perfectly on all devices
+- **Modern UI**: Clean, professional design with smooth animations
+- **No Backend Required**: Pure HTML/CSS/JS solution
+- **Easy Customization**: Simple configuration and styling
+- **SEO Optimized**: Fast loading and search engine friendly
+
+## 🚀 Quick Setup (5 Minutes)
+
+### 1. Upload Files
+- Extract all files to your web hosting directory
+- Your quiz is now live!
+
+### 2. Configure Email (Required)
+1. Sign up for free at [EmailJS](https://www.emailjs.com/)
+2. Create an email service and template
+3. Edit `assets/js/email-config.js` with your credentials
+4. Test the form submission
+
+### 3. Customize (Optional)
+- Edit text content directly in `index.html`
+- Modify colors and styling in the CSS files
+- Replace images in the assets folder
+
+## 📧 Email Setup Guide
+
+See `documentation/SETUP.md` for detailed email configuration instructions.
+
+## 🎨 Customization
+
+See `documentation/CUSTOMIZATION.md` for styling and content modification guides.
+
+## 📱 Browser Support
+
+- Chrome (latest)
+- Firefox (latest)
+- Safari (latest)
+- Edge (latest)
+- Mobile browsers
+
+## 📞 Support
+
+For support and customization help, contact through CodeCanyon.
+
+## 📄 License
+
+Regular License - Single domain use
+Extended License - Multiple domains/client projects
+
+---
+
+**Made with ❤️ for real estate professionals**
+README_EOF
 
 # Create setup guide
-cat > property-quiz-template/documentation/SETUP.md << 'EOF'
+cat > property-quiz-template/documentation/SETUP.md << 'SETUP_EOF'
 # 🚀 Property Quiz Setup Guide
 
 ## Quick Start (5 Minutes)
@@ -116,13 +200,13 @@ Sent from Property Quiz Landing Page
 - Check EmailJS dashboard for delivery logs
 
 **Map not showing?**
-- Maps use OpenStreetMap (free, no API key needed)
-- Check internet connection
-- Verify JavaScript is enabled in browser
-EOF
+- Maps use a simple placeholder (no API key needed)
+- For real maps, integrate Google Maps or similar service
+- Check browser console for JavaScript errors
+SETUP_EOF
 
 # Create customization guide
-cat > property-quiz-template/documentation/CUSTOMIZATION.md << 'EOF'
+cat > property-quiz-template/documentation/CUSTOMIZATION.md << 'CUSTOM_EOF'
 # 🎨 Customization Guide
 
 ## Quick Customizations
@@ -145,17 +229,16 @@ The template uses CSS variables for easy theming. Edit the main CSS file:
 
 ```css
 :root {
-  --primary: 220 50% 50%;        /* Main brand color (blue) */
-  --buy-color: 220 70% 50%;      /* Buy option (blue) */
-  --sell-color: 120 60% 40%;     /* Sell option (green) */
-  --rent-color: 25 90% 50%;      /* Rent option (orange) */
+  --primary: 215 82% 24%;        /* Main brand color (blue) */
+  --secondary: 43 96% 56%;       /* Secondary color (gold) */
+  --accent: 142 71% 45%;         /* Accent color (green) */
 }
 ```
 
-### Replace Hero Background
-1. Replace `assets/images/hero-bg.jpg` with your image
-2. Recommended size: 1920x1080px
-3. Keep the same filename or update CSS reference
+### Replace Images
+1. Replace images in `assets/images/` folder
+2. Keep the same filenames or update CSS references
+3. Recommended sizes: Hero image 1920x1080px
 
 ## Advanced Customizations
 
@@ -181,12 +264,6 @@ const budgetOptions = {
 1. Edit the contact form HTML in `index.html`
 2. Update the email template to include new fields
 3. Modify the JavaScript to capture additional data
-
-### Styling Changes
-The template is built with Tailwind CSS:
-- Utility classes for spacing, colors, typography
-- Responsive design built-in
-- Easy to modify existing styles
 
 ### Google Analytics Integration
 Add tracking code to `index.html`:
@@ -225,32 +302,6 @@ Add conversion tracking:
 </script>
 ```
 
-## Content Localization
-
-### Multi-Language Support
-1. Duplicate `index.html` for each language (e.g., `index-es.html`)
-2. Translate all text content
-3. Update email templates for each language
-4. Link between language versions
-
-### Currency Changes
-Update budget options and display text to match your local currency:
-- Replace $ with your currency symbol
-- Adjust budget ranges for local market
-- Update number formatting if needed
-
-## Performance Optimization
-
-### Image Optimization
-- Compress hero background image
-- Use WebP format for better compression
-- Add loading="lazy" for images below fold
-
-### Caching
-- Enable browser caching on your hosting
-- Use CDN for faster global loading
-- Minimize HTTP requests
-
 ## SEO Optimization
 
 ### Meta Tags
@@ -261,12 +312,9 @@ Update meta tags in `index.html`:
 <meta property="og:title" content="Property Quiz - Find Your Perfect Home">
 ```
 
-### Structured Data
-Add JSON-LD structured data for better search visibility.
-
 ## Support
 Need help with customizations? Contact through CodeCanyon for assistance.
-EOF
+CUSTOM_EOF
 
 echo "🔧 Setting proper file permissions..."
 # Set proper permissions
@@ -292,8 +340,7 @@ echo "📋 Package includes:"
 echo "   - Complete HTML template (built from React)"
 echo "   - EmailJS integration for submissions"
 echo "   - Responsive design with modern UI"
-echo "   - Interactive property map"
-echo "   - Color-coded property types"
+echo "   - Interactive property quiz flow"
 echo "   - Comprehensive documentation"
 echo "   - Easy customization guides"
 echo ""
@@ -312,4 +359,3 @@ echo "   1. Set up EmailJS account"
 echo "   2. Configure email settings"
 echo "   3. Test quiz submission"
 echo "   4. Customize colors and content"
-EOF
