@@ -9,8 +9,6 @@ import PropertyTypePage from "./pages/PropertyTypePage";
 import RequirementsPage from "./pages/RequirementsPage";
 import TimelinePage from "./pages/TimelinePage";
 import ContactPage from "./pages/ContactPage";
-import AdminLogin from "./pages/AdminLogin";
-import AdminPage from "./pages/AdminPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -27,8 +25,6 @@ const App = () => (
           <Route path="/quiz/requirements" element={<RequirementsPage />} />
           <Route path="/quiz/timeline" element={<TimelinePage />} />
           <Route path="/quiz/contact" element={<ContactPage />} />
-          <Route path="/admin/login" element={<AdminLogin />} />
-          <Route path="/admin/dashboard" element={<AdminPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
